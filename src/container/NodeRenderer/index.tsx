@@ -3,6 +3,9 @@ import React, { memo, useMemo, ComponentType, MouseEvent } from 'react';
 import { getNodesInside } from '../../utils/graph';
 import { useStoreState, useStoreActions } from '../../store/hooks';
 import { Node, NodeTypesType, WrapNodeProps, Edge } from '../../types';
+
+type GetMaxNodeSizeFunc = (node: Node) => { width: number; height: number; };
+
 interface NodeRendererProps {
   nodeTypes: NodeTypesType;
   selectNodesOnDrag: boolean;
@@ -17,6 +20,7 @@ interface NodeRendererProps {
   snapToGrid: boolean;
   snapGrid: [number, number];
   onlyRenderVisibleElements: boolean;
+  getMaxNodeSize?: GetMaxNodeSizeFunc;
 }
 
 const NodeRenderer = (props: NodeRendererProps) => {
@@ -31,7 +35,7 @@ const NodeRenderer = (props: NodeRendererProps) => {
   const updateNodeDimensions = useStoreActions((actions) => actions.updateNodeDimensions);
 
   const visibleNodes = props.onlyRenderVisibleElements
-    ? getNodesInside(nodes, { x: 0, y: 0, width, height }, transform, true)
+    ? getNodesInside(nodes, { x: 0, y: 0, width, height }, transform, true, props.getMaxNodeSize)
     : nodes;
 
   const transformStyle = useMemo(

@@ -85,6 +85,7 @@ const GraphView = ({
   onPaneScroll,
   onPaneContextMenu,
   onEdgeUpdate,
+  getMaxNodeSize,
 }: GraphViewProps) => {
   const isInitialised = useRef<boolean>(false);
   const setOnConnect = useStoreActions((actions) => actions.setOnConnect);
@@ -250,6 +251,7 @@ const GraphView = ({
         snapToGrid={snapToGrid}
         snapGrid={snapGrid}
         onlyRenderVisibleElements={onlyRenderVisibleElements}
+        getMaxNodeSize={getMaxNodeSize}
       />
       <EdgeRenderer
         edgeTypes={edgeTypes}

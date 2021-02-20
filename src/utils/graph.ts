@@ -212,11 +212,14 @@ export const graphPosToZoomedPos = ({ x, y }: XYPosition, [tx, ty, tScale]: Tran
   y: y * tScale + ty,
 });
 
+type GetMaxNodeSizeFunc = (node: Node) => { width: number; height: number; };
+
 export const getNodesInside = (
   nodes: Node[],
   rect: Rect,
   [tx, ty, tScale]: Transform = [0, 0, 1],
-  partially: boolean = false
+  partially: boolean = false,
+  getMaxNodeSize?: GetMaxNodeSizeFunc
 ): Node[] => {
   const rBox = rectToBox({
     x: (rect.x - tx) / tScale,
@@ -225,7 +228,18 @@ export const getNodesInside = (
     height: rect.height / tScale,
   });
 
-  return nodes.filter(({ __rf: { position, width, height, isDragging } }) => {
+  return nodes.filter((node) => {
+    const { __rf: { position, width: nodeWidth, height: nodeHeight, isDragging } } = node;
+    let width, height;
+    if ((nodeWidth === null || nodeHeight === null) && getMaxNodeSize) {
+      const maxSize = getMaxNodeSize(node);
+      width = maxSize.width;
+      height = maxSize.height;
+    } else {
+      width = nodeWidth;
+      height = nodeHeight;
+    }
+
     const nBox = rectToBox({ ...position, width, height });
     const xOverlap = Math.max(0, Math.min(rBox.x2, nBox.x2) - Math.max(rBox.x, nBox.x));
     const yOverlap = Math.max(0, Math.min(rBox.y2, nBox.y2) - Math.max(rBox.y, nBox.y));

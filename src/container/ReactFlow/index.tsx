@@ -49,6 +49,8 @@ const defaultEdgeTypes = {
   smoothstep: SmoothStepEdge,
 };
 
+type GetMaxNodeSizeFunc = (node: Node) => { width: number; height: number; };
+
 export interface ReactFlowProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onLoad'> {
   elements: Elements;
   onElementClick?: (event: MouseEvent, element: Node | Edge) => void;
@@ -109,6 +111,7 @@ export interface ReactFlowProps extends Omit<HTMLAttributes<HTMLDivElement>, 'on
   panOnScrollMode?: PanOnScrollMode;
   zoomOnDoubleClick?: boolean;
   onEdgeUpdate?: OnEdgeUpdateFunc;
+  getMaxNodeSize?: GetMaxNodeSizeFunc;
 }
 
 const ReactFlow = ({
@@ -173,6 +176,7 @@ const ReactFlow = ({
   onPaneContextMenu,
   children,
   onEdgeUpdate,
+  getMaxNodeSize,
   ...rest
 }: ReactFlowProps) => {
   const nodeTypesParsed = useMemo(() => createNodeTypes(nodeTypes), []);
@@ -240,6 +244,7 @@ const ReactFlow = ({
           onSelectionDragStop={onSelectionDragStop}
           onSelectionContextMenu={onSelectionContextMenu}
           onEdgeUpdate={onEdgeUpdate}
+          getMaxNodeSize={getMaxNodeSize}
         />
         <ElementUpdater elements={elements} />
         {onSelectionChange && <SelectionListener onSelectionChange={onSelectionChange} />}

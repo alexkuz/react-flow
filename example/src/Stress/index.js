@@ -4,7 +4,7 @@ import ReactFlow, { removeElements, addEdge, MiniMap, isNode, Controls, Backgrou
 import { getElements } from './utils';
 
 const onLoad = (reactFlowInstance) => {
-  reactFlowInstance.fitView();
+  // reactFlowInstance.fitView();
   console.log(reactFlowInstance.getElements());
 };
 
@@ -39,7 +39,7 @@ const StressFlow = () => {
   };
 
   return (
-    <ReactFlow elements={elements} onLoad={onLoad} onElementsRemove={onElementsRemove} onConnect={onConnect}>
+    <ReactFlow getMaxNodeSize={() => ({ width: 100, height: 100 })} defaultZoom={3} elements={elements} onLoad={onLoad} onElementsRemove={onElementsRemove} onConnect={onConnect}>
       <MiniMap />
       <Controls />
       <Background />
